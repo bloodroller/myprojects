@@ -1,1 +1,1 @@
-This readme for nothing:)
+I wrote my own code for KNN and cross-validation in this python files.
