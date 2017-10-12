@@ -1,2 +1,1 @@
-# myprojects
-new repos
+This readme for nothing:)
