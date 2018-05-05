@@ -1,1 +1,1 @@
-I wrote my own code for KNN and cross-validation in this python files.
+Here are my own realization of famous models. 
