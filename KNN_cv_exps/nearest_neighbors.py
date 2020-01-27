@@ -1,9 +1,6 @@
 import numpy as np
 from sklearn.neighbors import NearestNeighbors
-from sklearn.neighbors import KNeighborsClassifier
-from scipy.sparse import csr_matrix
-import sklearn.datasets
-import scipy.spatial
+
 class KNN_classifier:
     def __init__(self,k,strategy,metric,weights,test_block_size):
         self.k=k
