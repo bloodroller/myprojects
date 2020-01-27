@@ -39,10 +39,6 @@ def get_eye_ind(mat):
             break
     return ind
 
-class DegenerateMatrixError(Exception):
-    pass
-
-
 def make_generator_matrix(H):
     M=H.copy()
     m, n = M.shape[0], M.shape[1]
@@ -57,15 +53,6 @@ def make_generator_matrix(H):
     G[eye_ind] = M[:,ind]
     return (G, ind)
 
-    """
-    Create code generator matrix using given check matrix. The function must raise DegenerateMatrixError exception,
-    if given check matrix is degenerate
-
-    :param H: check matrix of size (m,n), np.array
-    :return G: generator matrix of size (n,k), np.array
-    :return ind: indices for systematic coding, i.e. G[ind,:] is unity matrix
-    """
-
 
 def update_messages_h_to_e(mu_h_to_e, mu_e_to_h, s, factor_index, var_indices, output_var_indices, non_converged_indices, trim=1e-8):
     num_synd = np.arange(non_converged_indices.shape[0])
@@ -76,19 +63,6 @@ def update_messages_h_to_e(mu_h_to_e, mu_e_to_h, s, factor_index, var_indices, o
         pl[num_synd,0] = 0.5 * (1 + delta_pl)
         pl[num_synd,1] = 0.5 * (1 - delta_pl)
         mu_h_to_e[factor_index,k,non_converged_indices] = pl[num_synd,(s[factor_index,non_converged_indices]+1) % 2]
-    """
-    Updates messages (in place) from one factor to a set of variables.
-
-    :param mu_h_to_e: all messages from factors to variables, 3D numpy array of size (m, n, num_syndromes)
-    :param mu_e_to_h: all messages from variables to factors, 3D numpy array of size (m, n, num_syndromes)
-    :param s: input syndroms, numpy array of size (m, num_syndromes)
-    :param factor_index: index of selected factor, a number
-    :param var_indices: indices of all variables than are connected to factor
-    :param output_var_indices: indices of variable for updated messages
-    :param non_converged_indices: indices of syndromes for updated messages
-    :param trim: trim value for updated messages
-    """
-    
 
 
 def update_messages_e_to_h_and_beliefs(mu_e_to_h, beliefs, mu_h_to_e, q, var_index, factor_indices, output_factor_indices, non_converged_indices, trim=1e-8):
@@ -100,19 +74,6 @@ def update_messages_e_to_h_and_beliefs(mu_e_to_h, beliefs, mu_h_to_e, q, var_ind
     p_1_b = q * np.prod(mu_h_to_e[factor_indices,var_index,:][:,non_converged_indices],axis=0)
     p_0_b = (1-q) * np.prod(1 - mu_h_to_e[factor_indices,var_index,:][:,non_converged_indices],axis=0)
     beliefs[var_index,non_converged_indices] = np.divide(p_1_b,(p_1_b+p_0_b),where=((p_1_b+p_0_b)!=0))
-    """
-    Updates messages (in place) from one variable to a set of factors and updates belief for this variable.
-    :param mu_e_to_h: all messages from variables to factors, 3D numpy array of size (m, n, num_syndromes)
-    :param beliefs: all beliefs, numpy array of size (n, num_syndromes)
-    :param mu_h_to_e: all messages from factors to variables, 3D numpy array of size (m, n, num_syndromes)
-    :param q: channel error probability
-    :param var_index: index of selected variable, a number
-    :param factor_indices: indices of all factors that are connected to selected variable
-    :param output_factor_indices: indices of factors for updated messages
-    :param non_converged_indices: indices of syndromes for updated messages
-    :param trim: trim value for updated messages
-    """
-    
 
 
 def decode(s, H, q, schedule='parallel', max_iter=200, tol_beliefs=1e-4, display=False):
@@ -195,21 +156,6 @@ def decode(s, H, q, schedule='parallel', max_iter=200, tol_beliefs=1e-4, display
     results = {"num_iter":num_iters_decod,"status":status_decod}
 
     return (hat_e,results)
-    """
-    LDPC decoding procedure for syndrome probabilistic model.
-    :param s: a set of syndromes, numpy array of size (m, num_syndromes)
-    :param H: LDPC check matrix, numpy array of size (m, n)
-    :param q: channel error probability
-    :param schedule: a schedule for updating messages, possible values are 'parallel' and 'sequential'
-    :param max_iter: maximal number of iterations
-    :param tol_beliefs: tolerance for beliefs stabilization
-    :param display: verbosity level
-    :return hat_e: decoded error vectors, numpy array of size (n, num_syndromes)
-    :return results: additional results, a dictionary with fields:
-        'num_iter': number of iterations for each syndrome decoding, numpy array of length num_syndromes
-        'status': status (0, 1, 2) for each syndrome decoding, numpy array of length num_syndromes
-    """
-    pass
 
 
 def estimate_errors(H, q, num_syndromes=200, display=False, schedule='parallel'):
@@ -221,15 +167,4 @@ def estimate_errors(H, q, num_syndromes=200, display=False, schedule='parallel')
     diver = len(np.where(results['status']==2)[0])/num_syndromes
     
     return (err_bit, err_block, diver)
-    """
-    Estimate error characteristics for given LDPC code
-    :param H: LDPC check matrix, numpy array of size (m, n)
-    :param q: channel error probability
-    :param num_syndromes: number of Monte Carlo simulations
-    :param display: verbosity level
-    :param schedule: message schedule for decoding procedure, possible values are 'sequential' and 'parallel'
-    :return err_bit: mean bit error, a number
-    :return err_block: mean block error, a number
-    :return diver: mean divergence, a number
-    """
-    pass
+
