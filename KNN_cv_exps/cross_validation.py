@@ -1,10 +1,5 @@
 import nearest_neighbors
 import numpy as np
-from sklearn.model_selection import cross_val_score
-from sklearn.neighbors import KNeighborsClassifier
-import sklearn.datasets
-import nearest_neighbors
-
 
 def kfold(n,n_folds):
     k=n//n_folds
